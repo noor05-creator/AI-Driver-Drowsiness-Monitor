@@ -106,7 +106,39 @@ chore: add opencv and dlib to requirements.txt
 ### Bad examples
 ```
 ### Bad examples
+updated stuff                  ← no type, too vague
+Fixed Bug.                     ← capitalized, has period
+feat: Added the EAR Function   ← past tense, capitalized
+wip                            ← meaningless
 ```
+### Automated Commit Message Enforcement
+
+Every commit message is automatically validated when you open a PR.
+If any commit in your branch fails the format check, the PR will be
+blocked with a red check showing exactly which commit failed and why.
+
+Rules enforced automatically:
+- Type must be one of: feat, fix, docs, refactor, test, chore
+- Type must be lowercase
+- Description must be lowercase
+- Description cannot be empty
+- No period at the end of the message
+- Maximum 72 characters total
+
+Fix a bad commit message using:
+```bash
+# If it is your most recent commit
+git commit --amend -m "feat: correct message here"
+git push --force origin your-branch-name
+
+# If it is an older commit you need to fix
+git rebase -i HEAD~3
+# Change 'pick' to 'reword' on the commit you want to fix
+# Save and enter the new message when prompted
+git push --force origin your-branch-name
+```
+
+Never use --force on main or dev. Only on your own feature branches.
 ---
 
 ## 3. Pull Request Process
