@@ -13,9 +13,10 @@ Read this fully before writing a single line of code.
 3. [Pull Request Process](#pull-request-process)
 4. [Pull Request Template](#pull-request-template)
 5. [Code Style Rules](#code-style-rules)
-6. [Docstring Requirements](#docstring-requirements)
-7. [What NOT to Commit](#what-not-to-commit)
-8. [Reviewer Responsibilities](#reviewer-responsibilities)
+6. [Flake8 Error Codes — What They Mean and How to Fix Them](#flake8-error-codes--what-they-mean-and-how-to-fix-them)
+7. [Docstring Requirements](#docstring-requirements)
+8. [What NOT to Commit](#what-not-to-commit)
+9. [Reviewer Responsibilities](#reviewer-responsibilities)
 
 ---
 
@@ -190,6 +191,60 @@ Closes #<issue number>
 - No hardcoded file paths — use `os.path.join()` for all paths
 
 ---
+
+### Flake8 Error Codes — What They Mean and How to Fix Them
+
+When your PR fails the automated style check, click "Details" on the
+failed check. You will see output like this:
+    ./detector.py:12:80: E501 line too long (95 > 79 characters)
+    ./main.py:3:1: F401 'os' imported but unused
+Format is always:
+    filename : line number : column number : error code : description
+
+    Go to the exact file and line number shown and apply the fix below:
+
+| Code | Problem | Fix |
+|---|---|---|
+| `E501` | Line longer than 79 characters | Break into multiple shorter lines |
+| `E302` | Missing 2 blank lines before a function | Add 2 blank lines before `def` |
+| `E303` | Too many blank lines | Remove extra blank lines |
+| `E111` | Indentation is not a multiple of 4 spaces | Use 4 spaces, never tabs |
+| `E117` | Over-indented code | Reduce indentation level |
+| `W291` | Trailing whitespace at end of line | Remove invisible spaces at line end |
+| `W293` | Whitespace on a blank line | Clear blank lines completely |
+| `W292` | No newline at end of file | Add one blank line at end of file |
+| `F401` | Imported but unused | Delete the unused import |
+| `F821` | Undefined variable name | Check spelling or missing import |
+| `E711` | Comparison to None using == | Change `== None` to `is None` |
+| `E712` | Comparison to True/False using == | Change `== True` to `is True` |
+| `W503` | Line break before binary operator | Move operator to end of previous line |
+| `E231` | Missing whitespace after comma or colon | Add a space after `,` `:` |
+| `E225` | Missing whitespace around operator | Add spaces around `=` `+` `-` etc |
+
+### How to check your code BEFORE pushing
+
+Run flake8 locally on your branch before opening a PR so you catch
+errors yourself first:
+
+```bash
+# Install flake8 if you haven't already
+pip install flake8
+
+# Check a specific file
+flake8 detector.py --max-line-length=79
+
+# Check all files at once
+flake8 . --max-line-length=79 --exclude=venv,__pycache__
+```
+
+Fix every error it reports, then push. The PR check should pass green.
+
+### Important
+
+Flake8 checks code style only — not whether your logic is correct.
+Passing the style check does not mean your code works. You are still
+responsible for testing your own code before opening a PR.
+
 
 ## 6. Docstring Requirements
 
