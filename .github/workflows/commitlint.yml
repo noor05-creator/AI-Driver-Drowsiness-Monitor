@@ -23,8 +23,5 @@ jobs:
           npm install --save-dev @commitlint/cli @commitlint/config-conventional
 
       - name: Validate commit messages
-        env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
-          npx commitlint --from "$BASE_SHA" --to "$HEAD_SHA" --verbose
+          npx commitlint --from origin/${{ github.base_ref }} --to HEAD --verbose
