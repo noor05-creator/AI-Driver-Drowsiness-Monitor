@@ -117,12 +117,25 @@ https://github.com/davisking/dlib-models/raw/master/shape_predictor_68_face_land
 Extract and place the `.dat` file in the root project folder.
 
 ### Step 5 — Download the dataset
-Download the MRL Eye Dataset from Kaggle:
-https://www.kaggle.com/datasets/kutaykutlu/drowsiness-detection
+## Dataset
 
-Place images in:
-- `/data/open/` — eyes open images
-- `/data/closed/` — eyes closed images
+This project uses the MRL Eye Dataset for training the CNN model.
+
+| Class | Images |
+|---|---|
+| Eyes Open | [24000] |
+| Eyes Closed | [24000] |
+| Total | [48000] |
+
+### Download instructions
+1. Go to https://www.kaggle.com/datasets/kutaykutlu/drowsiness-detection
+2. Download and extract the zip file
+3. Place open eye images in `/data/open/`
+4. Place closed eye images in `/data/closed/`
+5. Run `python preprocess.py` to resize all images to 24x24 grayscale
+
+Note: Images are not committed to this repository.
+Download the dataset manually before running any scripts.
 
 ---
 
