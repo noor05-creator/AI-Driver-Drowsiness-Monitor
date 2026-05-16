@@ -1,0 +1,11 @@
+venv/
+__pycache__/
+*.pyc
+*.h5
+shape_predictor_68_face_landmarks.dat
+data/open/
+data/closed/
+logs/*.csv
+assets/*.png
+.DS_Store
+*.env
