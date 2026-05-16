@@ -40,4 +40,3 @@ if open_count < 1000:
     print("WARNING: open eye images below 1000 minimum")
 if closed_count < 1000:
     print("WARNING: closed eye images below 1000 minimum")
-
