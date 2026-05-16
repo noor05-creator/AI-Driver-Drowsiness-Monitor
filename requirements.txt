@@ -1,11 +1,11 @@
-opencv-python==4.9.0.80
-dlib==19.24.4
-imutils==0.5.3
+opencv-python==4.13.0.92
+dlib==20.0.1
+imutils==0.5.4
 tensorflow==2.15.0
 keras==2.15.0
-numpy==1.26.4
+numpy==2.4.5
 pandas==2.2.1
 matplotlib==3.8.4
 pygame==2.5.2
-scipy==1.13.0
+scipy==1.17.1
 Pillow==10.3.0
