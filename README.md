@@ -90,7 +90,7 @@ drowsiness_monitor/
 
 ### Step 1 — Clone the repository
 ```bash
-git clone https://github.com/yourusername/drowsiness-monitor.git
+git clone https://github.com/noor05-creator/AI-Driver-Drowsiness-Monitor.git
 cd drowsiness-monitor
 ```
 
@@ -112,6 +112,8 @@ pip install -r requirements.txt
 
 
 ### Step 4 — Download dlib landmark predictor
+Download `shape_predictor_68_face_landmarks.dat` from:
+https://github.com/davisking/dlib-models/raw/master/shape_predictor_68_face_landmarks.dat.bz2
 
 Download the pre-trained 68-point facial landmark model:
 
