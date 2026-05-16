@@ -110,11 +110,30 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+
 ### Step 4 — Download dlib landmark predictor
 Download `shape_predictor_68_face_landmarks.dat` from:
 https://github.com/davisking/dlib-models/raw/master/shape_predictor_68_face_landmarks.dat.bz2
 
-Extract and place the `.dat` file in the root project folder.
+Download the pre-trained 68-point facial landmark model:
+
+1. Go to this URL and download the file:
+   https://github.com/davisking/dlib-models/raw/master/shape_predictor_68_face_landmarks.dat.bz2
+
+2. The file is compressed (.bz2 format). Extract it using:
+   - Windows: Right-click → Extract All
+   - Linux/Mac: run `bzip2 -d shape_predictor_68_face_landmarks.dat.bz2`
+
+3. After extraction you will have:
+   `shape_predictor_68_face_landmarks.dat` (95MB)
+
+4. Place this file in the root project folder:
+AI-Driver-Drowsiness-Monitor/
+└── shape_predictor_68_face_landmarks.dat
+> ⚠️ This file is 95MB and is listed in .gitignore.
+> Never commit it to the repository.
+
+
 
 ### Step 5 — Download the dataset
 ## Dataset
