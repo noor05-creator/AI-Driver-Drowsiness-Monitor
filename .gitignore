@@ -109,3 +109,16 @@ htmlcov/
 *.temp
 *.swp
 *.swo
+# ─── Test Images ──────────────────────────────────────────
+# Local test images — not part of the project
+test_images/
+
+# ─── Compressed Files ─────────────────────────────────────
+# Downloaded datasets and model files
+*.zip
+*.tar
+*.tar.gz
+*.tar.bz2
+*.bz2
+*.rar
+*.7z
