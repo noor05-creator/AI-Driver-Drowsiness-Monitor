@@ -169,7 +169,6 @@ def test_on_image(image_path):
 
 
 if __name__ == "__main__":
-    
     print("Testing with webcam...")
     cap = cv2.VideoCapture(0)
     counter = 0
