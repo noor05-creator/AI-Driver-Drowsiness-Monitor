@@ -1,6 +1,5 @@
 import cv2
 import dlib
-import numpy as np
 from scipy.spatial import distance as dist
 from imutils import face_utils
 
@@ -184,5 +183,3 @@ if __name__ == "__main__":
             break
     cap.release()
     cv2.destroyAllWindows()
-
-
