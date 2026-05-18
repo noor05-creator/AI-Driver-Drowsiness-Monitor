@@ -91,7 +91,6 @@ def preprocess_eye(eye_region):
     eye = eye.reshape(1, 24, 24, 1)
     return eye
 
-
 def draw_hud(frame, ear, cnn_conf, status, elapsed):
     """
     Draw the HUD overlay on the video frame.
@@ -109,23 +108,20 @@ def draw_hud(frame, ear, cnn_conf, status, elapsed):
     Returns:
         numpy.ndarray: Frame with HUD overlay drawn.
     """
+    h = frame.shape[0]
     color = (0, 0, 255) if status == "DROWSY" else (0, 255, 0)
     label = "DROWSY! ⚠" if status == "DROWSY" else "ALERT ✓"
 
     cv2.putText(
-        frame, label, (10, 30),
+        frame, label, (10, h - 90),
         cv2.FONT_HERSHEY_SIMPLEX, 0.8, color, 2
     )
     cv2.putText(
-        frame, f"EAR: {ear:.3f}", (10, 60),
+        frame, f"CNN: {cnn_conf:.2f}", (10, h - 60),
         cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2
     )
     cv2.putText(
-        frame, f"CNN: {cnn_conf:.2f}", (10, 90),
-        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2
-    )
-    cv2.putText(
-        frame, f"Time: {elapsed}", (10, 120),
+        frame, f"Time: {elapsed}", (10, h - 30),
         cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2
     )
     return frame
