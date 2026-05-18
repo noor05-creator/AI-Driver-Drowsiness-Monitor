@@ -192,12 +192,12 @@ The CNN was trained on the MRL Eye Dataset for 20 epochs.
 
 | Metric | Value |
 |---|---|
-| Training Accuracy | ~99.49% |
-| Validation Accuracy | ~91.45% |
+| Training Accuracy | 99.54% |
+| Validation Accuracy | 88.27% |
 | EAR Threshold | 0.25 |
 | Consecutive Frame Threshold | 20 frames |
 
-![Training Curves](assets/training_curves.png)
+![Training Curves](https://github.com/user-attachments/assets/ec367a8f-bb49-4c09-88b6-61316d9e77e5)
 
 ---
 
