@@ -11,7 +11,6 @@ import os
 import csv
 import datetime
 import cv2
-import numpy as np
 import pygame
 from tensorflow.keras.models import load_model
 from detector import detect_drowsiness
@@ -90,6 +89,7 @@ def preprocess_eye(eye_region):
     eye = eye / 255.0
     eye = eye.reshape(1, 24, 24, 1)
     return eye
+
 
 def draw_hud(frame, ear, cnn_conf, status, elapsed):
     """
