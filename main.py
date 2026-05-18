@@ -9,6 +9,7 @@ CSV session logging into one unified pipeline.
 
 import os
 import csv
+import time
 import datetime
 import cv2
 import pygame
@@ -91,39 +92,103 @@ def preprocess_eye(eye_region):
     return eye
 
 
-def draw_hud(frame, ear, cnn_conf, status, elapsed):
+def draw_hud(frame, ear, cnn_conf, status, elapsed, alert_count):
     """
-    Draw the HUD overlay on the video frame.
+    Draw the professional HUD overlay on the video frame.
 
-    Displays EAR value, CNN confidence, session timer,
-    and current drowsiness status on the frame.
+    Adds a semi-transparent black bar at the top, displays
+    EAR and CNN confidence top-left, status label top-center,
+    session timer top-right, alert count bottom-left, and
+    a colored border around the full frame.
 
     Args:
         frame (numpy.ndarray): Current video frame.
         ear (float): Current Eye Aspect Ratio value.
-        cnn_conf (float): CNN confidence score.
+        cnn_conf (float): CNN confidence score (0.0 to 1.0).
         status (str): Either 'DROWSY' or 'ALERT'.
-        elapsed (str): Session time elapsed as string.
+        elapsed (str): Session time in MM:SS format.
+        alert_count (int): Total alerts in current session.
 
     Returns:
         numpy.ndarray: Frame with HUD overlay drawn.
     """
-    h = frame.shape[0]
-    color = (0, 0, 255) if status == "DROWSY" else (0, 255, 0)
-    label = "DROWSY! ⚠" if status == "DROWSY" else "ALERT ✓"
+    h, w = frame.shape[:2]
+    is_drowsy = status == "DROWSY"
+    border_color = (0, 0, 255) if is_drowsy else (0, 255, 0)
+    label = "DROWSY! ⚠" if is_drowsy else "ALERT ✓"
+    label_color = (0, 0, 255) if is_drowsy else (0, 255, 0)
 
+    # --- Semi-transparent black bar at top ---
+    overlay = frame.copy()
+    cv2.rectangle(overlay, (0, 0), (w, 55), (0, 0, 0), -1)
+    cv2.addWeighted(overlay, 0.5, frame, 0.5, 0, frame)
+
+    # --- Top-left: EAR and CNN confidence ---
     cv2.putText(
-        frame, label, (10, h - 90),
-        cv2.FONT_HERSHEY_SIMPLEX, 0.8, color, 2
+        frame,
+        f"EAR: {ear:.2f}",
+        (10, 20),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.55,
+        (255, 255, 255),
+        2
     )
     cv2.putText(
-        frame, f"CNN: {cnn_conf:.2f}", (10, h - 60),
-        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2
+        frame,
+        f"CNN: {cnn_conf * 100:.1f}%",
+        (10, 42),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.55,
+        (255, 255, 255),
+        2
     )
+
+    # --- Top-center: large status label ---
+    label_size = cv2.getTextSize(
+        label, cv2.FONT_HERSHEY_SIMPLEX, 0.85, 2
+    )[0]
+    label_x = (w - label_size[0]) // 2
     cv2.putText(
-        frame, f"Time: {elapsed}", (10, h - 30),
-        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2
+        frame,
+        label,
+        (label_x, 35),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.85,
+        label_color,
+        2
     )
+
+    # --- Top-right: session timer ---
+    timer_size = cv2.getTextSize(
+        elapsed, cv2.FONT_HERSHEY_SIMPLEX, 0.55, 2
+    )[0]
+    timer_x = w - timer_size[0] - 10
+    cv2.putText(
+        frame,
+        elapsed,
+        (timer_x, 30),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.55,
+        (255, 255, 255),
+        2
+    )
+
+    # --- Bottom-left: total alert count ---
+    cv2.putText(
+        frame,
+        f"Alerts: {alert_count}",
+        (10, h - 10),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.55,
+        (255, 255, 255),
+        2
+    )
+
+    # --- Colored border around full frame ---
+    cv2.rectangle(
+        frame, (0, 0), (w - 1, h - 1), border_color, 3
+    )
+
     return frame
 
 
@@ -171,7 +236,8 @@ def run_detection():
 
     counter = 0
     alarm_on = False
-    start_time = datetime.datetime.now()
+    alert_count = 0
+    session_start = time.time()
 
     print("Detection started. Press 'q' to quit.")
 
@@ -191,7 +257,7 @@ def run_detection():
         cnn_conf = 0.0
         cnn_alert = False
         h, w = frame.shape[:2]
-        eye_region = frame[0:h//3, 0:w]
+        eye_region = frame[0:h // 3, 0:w]
 
         try:
             eye_input = preprocess_eye(eye_region)
@@ -211,6 +277,7 @@ def run_detection():
             if alarm and not alarm_on:
                 alarm.play(-1)
                 alarm_on = True
+                alert_count += 1
             log_event(ear, cnn_conf, status)
         else:
             status = "ALERT"
@@ -218,11 +285,16 @@ def run_detection():
                 pygame.mixer.stop()
                 alarm_on = False
 
+        # --- Session timer in MM:SS format ---
+        elapsed_secs = int(time.time() - session_start)
+        mins = elapsed_secs // 60
+        secs = elapsed_secs % 60
+        elapsed = f"{mins:02d}:{secs:02d}"
+
         # --- HUD Overlay ---
-        elapsed = str(
-            datetime.datetime.now() - start_time
-        ).split(".")[0]
-        frame = draw_hud(frame, ear, cnn_conf, status, elapsed)
+        frame = draw_hud(
+            frame, ear, cnn_conf, status, elapsed, alert_count
+        )
 
         cv2.imshow("Driver Drowsiness Monitor", frame)
 
